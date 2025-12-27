@@ -372,6 +372,8 @@ static const struct zwlr_layer_surface_v1_listener layer_surface_listener = {
 	.closed = layer_surface_closed,
 };
 
+static struct swaylock_state state;
+
 static void ext_session_lock_surface_v1_handle_configure(void *data,
 		struct ext_session_lock_surface_v1 *lock_surface, uint32_t serial,
 		uint32_t width, uint32_t height) {
@@ -386,7 +388,9 @@ static void ext_session_lock_surface_v1_handle_configure(void *data,
 	render_frame_background(surface, false);
 	ext_session_lock_surface_v1_ack_configure(lock_surface, serial);
 	wl_surface_commit(surface->surface);
-	// render_frame(surface);
+	if(!state.args.fade_in){
+		render_frame(surface);
+	}
 }
 
 static const struct ext_session_lock_surface_v1_listener ext_session_lock_surface_v1_listener = {
@@ -1740,8 +1744,6 @@ static int load_config(char *path, struct swaylock_state *state,
 	fclose(config);
 	return 0;
 }
-
-static struct swaylock_state state;
 
 static void display_in(int fd, short mask, void *data) {
 	if (wl_display_dispatch(state.display) == -1) {
