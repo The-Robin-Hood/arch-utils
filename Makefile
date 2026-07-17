@@ -4,10 +4,12 @@ SHELL := /bin/bash
 BUILD_DIR   := $(CURDIR)/builds
 SWAY_DIR    := $(CURDIR)/swaylock-mod
 WDU_DIR     := $(CURDIR)/wdu
+TPLINKCTL_DIR := $(CURDIR)/tplinkctl 
 INSTALL_DIR := $(HOME)/.wraith/bin
 
 SWAY_BIN := swaylock
 WDU_BIN  := wdu
+TPLINKCTL_BIN := tplinkctl 
 
 GREEN  := \033[0;32m
 YELLOW := \033[0;33m
@@ -38,13 +40,14 @@ help:
 	@echo "  all             Build all components"
 	@echo "  swaylock        Build swaylock"
 	@echo "  wdu             Build wdu"
+	@echo "  tplinkctl       Build tplinkctl"
 	@echo "  install         Build and install binaries"
 	@echo "  clean           Remove all build artifacts\n"
 
 # ---------------------------------------------------------
 # Targets
 # ---------------------------------------------------------
-all: swaylock wdu
+all: swaylock wdu tplinkctl
 	@echo -e "\n$(GREEN)All builds completed$(RESET)"
 	@echo -e "$(BOLD)Artifacts in $(BUILD_DIR)$(RESET)"
 
@@ -72,15 +75,25 @@ wdu: prepare
 	@cd $(WDU_DIR) && go build -o $(BUILD_DIR)/$(WDU_BIN)
 	@echo -e "$(GREEN)WDU built successfully$(RESET)"
 
+tplinkctl: prepare
+	@echo -e "\n$(BOLD)Building tplinkctl$(RESET)"
+	$(call require,go)
+
+	@cd $(TPLINKCTL_DIR) && go build -o $(BUILD_DIR)/$(TPLINKCTL_BIN)
+	@echo -e "$(GREEN)tplinkctl built successfully$(RESET)"
+
 install: all
 	@echo -e "\n$(BOLD)Installing binaries$(RESET)"
 	@mkdir -p $(INSTALL_DIR)
 	@cp $(BUILD_DIR)/$(SWAY_BIN) $(INSTALL_DIR)/
 	@cp $(BUILD_DIR)/$(WDU_BIN) $(INSTALL_DIR)/
+	@cp $(BUILD_DIR)/$(TPLINKCTL_BIN) $(INSTALL_DIR)/
 	@echo -e "$(GREEN)Installed to $(INSTALL_DIR)$(RESET)"
 
 clean:
 	@echo -e "\n$(YELLOW)Cleaning build artifacts$(RESET)"
 	@rm -rf $(BUILD_DIR)
 	@rm -rf $(SWAY_DIR)/build
+	@rm -rf $(WDU_DIR)/$(WDU_BIN)
+	@rm -rf $(TPLINKCTL_DIR)/$(TPLINKCTL_BIN)
 	@echo -e "$(GREEN)Clean complete$(RESET)\n"
