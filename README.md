@@ -10,7 +10,11 @@ A customized fork of `swaylock`, a screen locking utility for Wayland compositor
 ### [wdu/](wdu/)
 A disk usage utility written in Go that displays filesystem information in a formatted table.
 
+### [tplinkctl/](tplinkctl/)
+A command-line utility for extracting info from tplink network devices.
+
 ## Outputs
 Build artifacts are placed in the `builds/` directory:
 - `builds/swaylock` - Compiled swaylock binary
 - `builds/wdu` - Compiled wdu binary
+- `builds/tplinkctl` - Compiled tplinkctl binary
